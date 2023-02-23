@@ -1,0 +1,25 @@
+{
+  "name": "crud_router_backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "prestart": "npm ci",
+    "start": "nodemon server.js"
+  },
+  "repository": "https://github.com/Aleksandr-Suchugov/crud_router-backend.git",
+  "author": "aleksandr-suchugov",
+  "license": "MIT",
+  "dependencies": {
+    "@koa/cors": "^4.0.0",
+    "faker": "^6.6.6",
+    "forever": "^4.0.3",
+    "http": "^0.0.1-security",
+    "koa": "^2.14.1",
+    "koa-body": "^6.0.1",
+    "koa-router": "^12.0.0",
+    "koa-static": "^5.0.0",
+    "koa2-cors": "^2.0.6",
+    "nodemon": "^2.0.20",
+    "uuid": "^9.0.0"
+  }
+}
