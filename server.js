@@ -1,46 +1,73 @@
-const http = require('http');
-const Koa = require('koa');
-const Router = require('koa-router');
-const cors = require('koa2-cors');
-const { koaBody } = require('koa-body');
+const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
 
-const app = new Koa();
+const app = express();
 
 app.use(cors());
-app.use(koaBody({ json: true }));
+app.use(
+  bodyParser.json({
+    type() {
+      return true;
+    }
+  })
+);
+
+app.use((req, res, next) => {
+  res.setHeader("Content-Type", "application/json");
+  next();
+});
 
 let posts = [];
 let nextId = 1;
 
-const router = new Router();
-
-router.get('/posts', async (ctx, next) => {
-    ctx.response.body = posts;
+app.get('/posts', (req, res) => {
+  res.send(JSON.stringify(posts));
 });
 
-router.post('/posts', async(ctx, next) => {
-    const {id, content} = ctx.request.body;
-    if (id !== 0) {
-        posts = posts.map(o => o.id !== id ? o : {...o, content: content});
-        ctx.response.status = 204;
-        return;
+app.get('/posts/:id', (req, res) => {
+  const postId = Number(req.params.id);
+  const index = posts.findIndex((o) => o.id === postId);
+  res.send(JSON.stringify({ post: posts[index] }));
+});
+
+app.post('/posts', (req, res) => {
+  posts.push({
+    ...req.body,
+    id: nextId++,
+    created: Date.now()
+  });
+  res.status(204);
+  res.end();
+});
+
+app.put('/posts/:id', (req, res) => {
+  const postId = Number(req.params.id);
+  posts = posts.map(o => {
+    if (o.id === postId) {
+      return {
+        ...o,
+        ...req.body,
+        id: o.id
+      }
     }
-
-    posts.push({...ctx.request.body, id: nextId++, created: Date.now()});
-    ctx.response.status = 204;
+    return o;
+  });
+  res.status(204).end();
 });
 
-router.delete('/posts/:id', async(ctx, next) => {
-    const postId = Number(ctx.params.id);
-    const index = posts.findIndex(o => o.id === postId);
-    if (index !== -1) {
-        posts.splice(index, 1);
-    }
-    ctx.response.status = 204;
-});
+app.delete('/posts/:id', (req, res) => {
+  const postId = Number(req.params.id);
+  const index = posts.findIndex((o) => o.id === postId);
 
-app.use(router.routes()).use(router.allowedMethods());
+  if (index !== -1) posts.splice(index, 1);
 
+  res.status(204);
+  res.end();
+})
+
+// eslint-disable-next-line no-undef
 const port = process.env.PORT || 7070;
-const server = http.createServer(app.callback());
-server.listen(port, () => console.log('server started'));
+app.listen(port, () => {
+  console.log(`The server is running on http://localhost:${port}`);
+});

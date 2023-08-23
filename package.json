@@ -3,26 +3,14 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "prestart": "npm install",
-    "start": "forever ./src/js/server.js",
-    "watch": "forever -w ./src/js/server.js"
+    "start": "node server.js"
   },
   "repository": "https://github.com/Aleksandr-Suchugov/crud_router-backend.git",
   "author": "aleksandr-suchugov",
   "license": "MIT",
   "dependencies": {
-    "@koa/cors": "^4.0.0",
-    "faker": "^6.6.6",
-    "forever": "^4.0.3",
-    "http": "^0.0.1-security",
-    "koa": "^2.14.1",
-    "koa-body": "^6.0.1",
-    "koa-passport": "^6.0.0",
-    "koa-router": "^12.0.0",
-    "koa-static": "^5.0.0",
-    "koa2-cors": "^2.0.6",
-    "nodemon": "^2.0.20",
-    "passport-http-bearer": "^1.0.1",
-    "uuid": "^9.0.0"
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "express": "^4.18.2"
   }
 }
